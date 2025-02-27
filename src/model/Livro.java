@@ -27,6 +27,11 @@ public class Livro {
         return titulo;
     }
 
+    public void setDisponivel(boolean disponivel) {
+        this.dataAtualizacao = LocalDateTime.now();
+        this.disponivel = disponivel;
+    }
+
     public boolean isDisponivel() {
         return disponivel;
     }

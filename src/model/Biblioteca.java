@@ -8,6 +8,7 @@ public class Biblioteca {
     List<Autor> autores = new ArrayList<>();
     List<Livro> livros = new ArrayList<>();
     List<Cliente> clientes = new ArrayList<>();
+    List<Emprestimo> emprestimos = new ArrayList<>();
 
     public void addAutor(Autor autor){
         autores.add(autor);
@@ -25,8 +26,16 @@ public class Biblioteca {
         return null;
     }
 
-    public List<Livro>getLivros(){
+    public List<Livro> getLivros(){
         return livros;
+    }
+
+    public Livro getLivroById(int id){
+        for (Livro livro : livros){
+            if(livro.getId() == id)
+                return livro;
+        }
+        return null;
     }
 
     public List<Livro> getLivrosDisponiveis(){
@@ -50,6 +59,39 @@ public class Biblioteca {
 
     public List<Cliente> getClientes(){
         return clientes;
+    }
+
+    public Cliente getClienteById(int id){
+        for (Cliente cliente : clientes){
+            if(cliente.getId() == id)
+                return cliente;
+        }
+        return null;
+    }
+
+    public List<Emprestimo> getEmprestimos(){
+        return emprestimos;
+    }
+
+    public List<Emprestimo> getEmprestimosAtivos(){
+        List<Emprestimo> emprestimosAtivos = new ArrayList<>();
+        for (Emprestimo emprestimo : emprestimos){
+            if( emprestimo.getDataDevolucao() == null)
+                emprestimosAtivos.add(emprestimo);
+        }
+        return emprestimosAtivos;
+    }
+
+    public Emprestimo getEmprestimoById(int id){
+        for (Emprestimo emprestimo : emprestimos){
+            if(emprestimo.getId() == id)
+                return emprestimo;
+        }
+        return null;
+    }
+
+    public void addEmprestimo(Emprestimo emprestimo){
+        emprestimos.add(emprestimo);
     }
 
 }

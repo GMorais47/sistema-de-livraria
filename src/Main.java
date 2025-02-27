@@ -1,8 +1,7 @@
-import model.Autor;
-import model.Biblioteca;
-import model.Cliente;
-import model.Livro;
+import model.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
@@ -22,6 +21,9 @@ public class Main {
             System.out.println("[ 4 ] - Listar Livros Disponíveis;");
             System.out.println("[ 5 ] - Cadastrar Cliente;");
             System.out.println("[ 6 ] - Listar Cliente;");
+            System.out.println("[ 7 ] - Cadastrar Empréstimo;");
+            System.out.println("[ 8 ] - Listar Empréstimos Ativos;");
+            System.out.println("[ 9 ] - Devolver livro;");
             System.out.println("\n[ 0 ] - Sair;");
             System.out.print("\nEscolha uma das opções: ");
             escolha = scanner.nextInt();
@@ -59,7 +61,7 @@ public class Main {
                     int autorID = scanner.nextInt();
                     Autor autorSelecionado = biblioteca.getAutorById(autorID);
                     if(autorSelecionado != null){
-                        int quantidadeLivros = biblioteca.getAutores().size();
+                        int quantidadeLivros = biblioteca.getLivros().size();
                         Livro novoLivro = new Livro(++quantidadeLivros,titulo,autorSelecionado);
                         biblioteca.addLivro(novoLivro);
                         System.out.println(String.format("O livro %s foi cadastrado(a) com sucesso!", novoLivro.getTitulo()));
@@ -68,7 +70,7 @@ public class Main {
                     }
                     break;
                 case 4:
-                    System.out.println("\n========== LISTA DE LIVROS DISPONIVEIS ==========");
+                    System.out.println("\n========== LISTA DE LIVROS DISPONÍVEIS ==========");
                     List<Livro> livrosDisponiveis = biblioteca.getLivrosDisponiveis();
                     if (livrosDisponiveis.isEmpty()) {
                         System.out.println("Nenhum livro disponível!");
@@ -96,6 +98,70 @@ public class Main {
                         for (Cliente cliente : clientes) {
                             System.out.println(String.format("%d - %s", cliente.getId(), cliente.getNome()));
                         }
+                    }
+                    break;
+                case 7:
+                    System.out.println("\n========== CADASTRAR EMPRÉSTIMO ==========");
+                    System.out.print("\nQual o código do livro: ");
+                    int livroID = scanner.nextInt();
+                    System.out.print("\nQual o código do cliente: ");
+                    int clienteID = scanner.nextInt();
+                    scanner.nextLine();
+
+                    Livro livroSelecionado = biblioteca.getLivroById(livroID);
+                    Cliente clienteSelecionado = biblioteca.getClienteById(clienteID);
+
+                    if (livroSelecionado != null && clienteSelecionado != null) {
+                        if (livroSelecionado.isDisponivel()) {
+                            int quantidadeEmprestimos = biblioteca.getEmprestimos().size();
+                            Emprestimo novoEmprestimo = new Emprestimo(++quantidadeEmprestimos, livroSelecionado, clienteSelecionado);
+                            biblioteca.addEmprestimo(novoEmprestimo);
+                            livroSelecionado.setDisponivel(false);
+                            System.out.println("Empréstimo cadastrado com sucesso!");
+                        } else {
+                            System.out.println("Este livro já está emprestado!");
+                        }
+                    } else {
+                        System.out.println("Livro ou cliente não encontrado!");
+                    }
+                    break;
+
+                case 8:
+                    System.out.println("\n========== LISTA DE EMPRÉSTIMOS ATIVOS ==========");
+                    List<Emprestimo> emprestimos = biblioteca.getEmprestimosAtivos();
+                    if (emprestimos.isEmpty()) {
+                        System.out.println("Nenhum empréstimo ativo cadastrado!");
+                    } else {
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm");
+
+                        for (Emprestimo emprestimo : emprestimos) {
+                            String dataFormatada = emprestimo.getDataCriacao().format(formatter);
+                            System.out.println(String.format("%d - %s - %s - %s",
+                                    emprestimo.getId(),
+                                    dataFormatada,
+                                    emprestimo.getLivro().getTitulo(),
+                                    emprestimo.getCliente().getNome()));
+                        }
+                    }
+                    break;
+                case 9:
+                    System.out.println("\n========== DEVOLVER LIVRO ==========");
+                    System.out.print("\nQual o código do empréstimo: ");
+                    int codigoEmprestimo = scanner.nextInt();
+                    scanner.nextLine();
+
+                    Emprestimo emprestimoSelecionado = biblioteca.getEmprestimoById(codigoEmprestimo);
+                    if(emprestimoSelecionado != null){
+                        if(emprestimoSelecionado.getDataDevolucao() == null){
+                            Livro livro = emprestimoSelecionado.getLivro();
+                            livro.setDisponivel(true);
+                            emprestimoSelecionado.setDataDevolucao(LocalDateTime.now());
+                            System.out.println(String.format("O empréstimo %d foi devolvido com sucesso!", emprestimoSelecionado.getId()));
+                        }else {
+                            System.out.println("Esse empréstimo já foi devolvido!");
+                        }
+                    }else {
+                        System.out.println("Empréstimo não encontrado!");
                     }
                     break;
                 default:

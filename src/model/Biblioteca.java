@@ -7,6 +7,7 @@ public class Biblioteca {
 
     List<Autor> autores = new ArrayList<>();
     List<Livro> livros = new ArrayList<>();
+    List<Cliente> clientes = new ArrayList<>();
 
     public void addAutor(Autor autor){
         autores.add(autor);
@@ -41,6 +42,14 @@ public class Biblioteca {
 
     public void addLivro(Livro livro){
         livros.add(livro);
+    }
+
+    public void addCliente(Cliente cliente){
+        clientes.add(cliente);
+    }
+
+    public List<Cliente> getClientes(){
+        return clientes;
     }
 
 }

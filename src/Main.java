@@ -1,5 +1,6 @@
 import model.Autor;
 import model.Biblioteca;
+import model.Cliente;
 import model.Livro;
 
 import java.util.List;
@@ -19,6 +20,8 @@ public class Main {
             System.out.println("[ 2 ] - Listar Autores;");
             System.out.println("[ 3 ] - Cadastrar Livro;");
             System.out.println("[ 4 ] - Listar Livros Disponíveis;");
+            System.out.println("[ 5 ] - Cadastrar Cliente;");
+            System.out.println("[ 6 ] - Listar Cliente;");
             System.out.println("\n[ 0 ] - Sair;");
             System.out.print("\nEscolha uma das opções: ");
             escolha = scanner.nextInt();
@@ -72,6 +75,26 @@ public class Main {
                     } else {
                         for (Livro livro : livrosDisponiveis) {
                             System.out.println(String.format("%d - %s", livro.getId(), livro.getTitulo()));
+                        }
+                    }
+                    break;
+                case 5:
+                    System.out.println("\n========== CADASTRAR CLIENTE ==========");
+                    System.out.print("\nQual o nome do cliente: ");
+                    String nomeCliente = scanner.nextLine().toUpperCase();
+                    int quantidadeClientes = biblioteca.getClientes().size();
+                    Cliente novoCliente = new Cliente(++quantidadeClientes, nomeCliente);
+                    biblioteca.addCliente(novoCliente);
+                    System.out.println(String.format("O(a) cliente %s foi cadastrado(a) com sucesso!", novoCliente.getNome()));
+                    break;
+                case 6:
+                    System.out.println("\n========== LISTA DE CLIENTES ==========");
+                    List<Cliente> clientes = biblioteca.getClientes();
+                    if (clientes.isEmpty()) {
+                        System.out.println("Nenhum cliente cadastrado!");
+                    } else {
+                        for (Cliente cliente : clientes) {
+                            System.out.println(String.format("%d - %s", cliente.getId(), cliente.getNome()));
                         }
                     }
                     break;
